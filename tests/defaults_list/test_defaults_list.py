@@ -86,6 +86,16 @@ Plugins.instance()
 #  - (Y) ensure all tests are passing
 #  - (Y) implement --info=defaults-tree output
 
+# TODO: (Y) rename support:
+#  - (Y) Remove rename support form 1.1
+#  - (Y) Deprecate rename support in 1.0 : task filed
+
+# TODO: cleanup
+#  - (Y) Remove previous implementation of recursive defaults list and rename new_defaults_list to defaults_list etc.
+#  - (Y) Delete tests and test data of old defaults list impl
+#  - (Y) Clean up package logic from config sources
+#  - (Y) Clean up Hydra 1.0 warnings related to package header
+
 # TODO: Followup items
 #  - (Y) Consider retaining the final choices in the hydra config node to allow interpolation with their values.
 #  - (Y) Enforce that overrides are at the end of the defaults list
@@ -95,33 +105,23 @@ Plugins.instance()
 #  - (Y) Profile and optimize default tree composition: speed in line with 1.0
 #  - (Y) Test cases when config group name matches a keyword (optional, override)
 #  - (Y) Clean up sporadic TODOs in the code
-
-# TODO: (Y) rename support:
-#  - (Y) Remove rename support form 1.1
-#  - Deprecate rename support in 1.0
-
-
-# TODO: cleanup
-#  - (Y) Remove previous implementation of recursive defaults list and rename new_defaults_list to defaults_list etc.
-#  - (Y) Delete tests and test data of old defaults list impl
-#  - Clean up package logic from config sources
-#  - Clean up Hydra 1.0 warnings related to package header
-
+#  - (Y) Evaluate possibility of changing default _self_ location to trailing
+#  - (Y) Test interpolation in nested configs
+#        Decision: not supported. it will take a lot more effort to make this intuitive.
+#  - (Y) Test interpolation in ConfigDefault entries
+#  - (Y) Error message makes the wrong suggestions when the override is in a nested default.
 
 # TODO Documentation
-#  - Update defaults list documentation
-#  - Create a page describing configuring experiments with Hydra (experiment use case)
-#  - Create https://hydra.cc/docs/next/upgrades/1.0_to_1.1/default_list_override
-#  - Update Structured Configs tutorial to utilize recursive defaults as an alternative to automatic schema
-#  - Consider deprecating automatic schema support in favor of extending a config via recursive defaults
-#  - Document --info defaults and --info defaults-tree
+#  - (Y) Create Defaults List
+#  - (Y) Create a page for packages overrides
+#  - (Y) Create a page for Extending configs
+#  - (Y) Create a page describing configuring experiments with Hydra (experiment use case)
+#  - (Y) Create https://hydra.cc/docs/next/upgrades/1.0_to_1.1/defaults_list_override
+#  - (Y) Create https://hydra.cc/docs/next/upgrades/1.0_to_1.1/default_composition_order
+#  - (Y) Document --info defaults and --info defaults-tree
+#  - (Y) Update command line flags page
 #  - Document hydra.choices
 #  - Add news fragments for user facing features
-
-
-# TODO: Followup items to explore
-#  - Consider deprecating automatic schema support in favor of extending a config via recursive defaults
->>>>>>> e19da87be... added hydra.choices node
 
 
 @mark.parametrize(  # type: ignore
