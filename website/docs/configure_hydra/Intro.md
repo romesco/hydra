@@ -21,50 +21,64 @@ your function to reduce confusion.
 You can view the configuration with `--cfg hydra|job|all`
 
 The Hydra configuration itself is composed from multiple config files. here is a partial list:
-```yaml
+```yaml title="hydra/config"
 defaults:
-  - hydra/job_logging : default     # Job's logging config
-  - hydra/launcher: basic           # Launcher config
-  - hydra/sweeper: basic            # Sweeper config
-  - hydra/output: default           # Output directory
+  - job_logging : default     # Job's logging config
+  - launcher: basic           # Launcher config
+  - sweeper: basic            # Sweeper config
+  - output: default           # Output directory
 ```
 You can view the Hydra config structure [here](https://github.com/facebookresearch/hydra/tree/master/hydra/conf).
 
-This is a subset of the composed Hydra configuration node:
-
-```yaml
+You can view the Hydra config using `--cfg hydra`:
+```yaml title="$ python my_app.py --cfg hydra"
 hydra:
   run:
-    # Output directory for normal runs
-    dir: ./outputs/${now:%Y-%m-%d_%H-%M-%S}
+    dir: outputs/${now:%Y-%m-%d}/${now:%H-%M-%S}
   sweep:
-    # Output directory for sweep runs
-    dir: /checkpoint/${env:USER}/outputs/${now:%Y-%m-%d_%H-%M-%S}
-    # Output sub directory for sweep runs.
-    subdir: ${hydra.job.num}_${hydra.job.id}
+    dir: multirun/${now:%Y-%m-%d}/${now:%H-%M-%S}
+    subdir: ${hydra.job.num}
+  launcher:
+    _target_: hydra._internal.core_plugins.basic_launcher.BasicLauncher
+  sweeper:
+    _target_: hydra._internal.core_plugins.basic_sweeper.BasicSweeper
+    max_batch_size: null
+  hydra_logging:
+    version: 1
+    formatters:
+    ...
 ```
 
 ## Runtime variables
-The `hydra` package is deleted from your config when the function runs to reduce the amount of noise
-in the config passed to the function.  
-You can still access all config nodes in Hydra through the custom resolver `hydra`. 
+The Hydra config is large. To reduce clutter in your own config it's being deleted from the config object
+Hydra is passing to the function annotated by `@hydra.main()`.
 
-For example:
+There are two ways to access the Hydra config:
+
+#### In your config, using the `hydra` resolver:
 ```yaml
-config_name: ${hydra:job.config_name}
+config_name: ${hydra:job.name}
 ```
 Pay close attention to the syntax: The resolver name is `hydra`, and the `key` is passed after the colon.
 
-The following variables are some of the variables populated at runtime.  
-You can see the full Hydra config using `--cfg hydra`:
+#### In your code, using the HydraConfig singleton.
+```python
+from hydra.core.hydra_config import HydraConfig
 
-`hydra.job`:
+@hydra.main()
+def my_app(cfg: DictConfig) -> None:
+    print(HydraConfig.get().job.name)
+```
+
+The following variables are populated at runtime.  
+
+#### hydra.job:
 - *hydra.job.name* : Job name, defaults to python file name without suffix. can be overridden.
 - *hydra.job.override_dirname* : Pathname derived from the overrides for this job
 - *hydra.job.num* : job serial number in sweep
 - *hydra.job.id* : Job ID in the underlying jobs system (SLURM etc) 
 
-`hydra.runtime`:
+#### hydra.runtime:
 - *hydra.runtime.version*: Hydra's version
 - *hydra.runtime.cwd*: Original working directory the app was executed from
 

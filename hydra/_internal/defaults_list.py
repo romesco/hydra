@@ -383,7 +383,7 @@ def _update_overrides(
             if legacy_hydra_override:
                 # DEPRECATED: remove in 1.2
                 d.override = True
-                url = "https://hydra.cc/docs/next/upgrades/1.0_to_1.1/default_list_override"
+                url = "https://hydra.cc/docs/next/upgrades/1.0_to_1.1/defaults_list_override"
                 msg = dedent(
                     f"""\
                     In {parent.get_config_path()}: Invalid overriding of {d.group}:
